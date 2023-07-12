@@ -1,0 +1,71 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct person
+{
+    char name[255];
+    int age;
+    int deleted;
+} person;
+typedef person * Person;
+
+typedef struct persons
+{
+    Person persons;
+    int size;
+    int current;
+} persons;
+typedef persons * Persons;
+
+Persons init(int size)
+{
+    Persons persons = (Persons) malloc(sizeof(person));
+    persons->persons = (Person) malloc(sizeof(person) * size);
+    if (NULL != persons) {
+        if (NULL != persons->persons) {
+            persons->current = 0;
+            persons->size = size;
+            return persons;
+        }
+    }
+    exit(EXIT_FAILURE);
+}
+
+int main() {
+    int size;
+    Persons persons;
+
+    printf("combien de personnes ? ");
+    scanf("%d", &size);
+
+    persons = init(size);
+
+    for (int i = 0; i < persons->size; i++)
+    {
+        printf("Nom #%d : ", i + 1);
+        scanf("%s", persons->persons[i].name);
+
+        printf("Age #%d : ", i + 1);
+        scanf("%d", &persons->persons[i].age);
+        persons->persons[i].deleted = 0;
+        printf("\n");
+    }
+
+    printf("\n\n personnes sauvegadés \n");
+    for (int i = 0; i < persons->size; i++) {
+        if (persons->persons[i].age > 20) {
+            persons->persons[i].deleted = 1;
+        } else {
+            printf("Nom : %s, age : %d \n", persons->persons[i].name, persons->persons[i].age);
+        }
+    }
+
+    printf("\n\npersonnes supprimés \n");
+    for(int i = 0; i < persons->size; i++) {
+        if (persons->persons[i].deleted == 1) {
+            printf("Nom : %s, age : %d \n", persons->persons[i].name, persons->persons[i].age);
+        }   
+    }
+
+    return EXIT_SUCCESS;
+}
